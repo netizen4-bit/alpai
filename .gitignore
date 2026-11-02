@@ -1,0 +1,17 @@
+# ALP Private Configuration & Data
+config.json
+conversations.json
+.env
+# Downloaded MCP Servers & Skills
+mcp_servers/
+skills/
+assets/
+# Python & Build Artifacts
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+# OS Generated Files
+.DS_Store
+Thumbs.db
