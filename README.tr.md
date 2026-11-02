@@ -61,6 +61,54 @@ Mevcut otonom ajan platformlarının çoğu (Hermes, OpenClaw vb.) kullanıcıla
 
 ---
 
+## 🧠 Ölçeklenebilir Yürütüm Mimarisi: Lazy-Start & Dinamik Filtreleme
+
+Sisteme bağlanan MCP sunucusu ve araç sayısı onlarca veya yüzlerceye (150–200+ araç) ulaştığında, geleneksel yapay zeka ajanları aşırı bellek tüketimi ve bağlam penceresi şişmesi nedeniyle kilitlenir. ALP Terminal, bu sorunu üç aşamalı optimize bir yürütüm mimarisiyle çözer:
+
+```mermaid
+flowchart TD
+    UserQuery(["Kullanıcı Görevi / İstemi"]) --> DynamicFilter["Dinamik Görev Filtresi (Sıfır Bağlam Şişmesi)"]
+    
+    subgraph S1 ["1. Yürütüm Öncesi Filtreleme Katmanı"]
+        DynamicFilter --> FilterSkills["filter_skills_for_task<br/>(SKILL.md indeksini tarar)"]
+        DynamicFilter --> FilterTools["filter_tools_for_task<br/>(Anahtar kelime eşleme ve rota)"]
+        FilterSkills --> ActiveSkills["Aktif İlgili Yetenekler"]
+        FilterTools --> ActiveSchema["Önbelleğe Alınmış Araç Şemaları<br/>(Çevrimdışı mcp_schema_cache.json)"]
+    end
+
+    ActiveSkills --> PromptBuilder["Optimize İstem & Bağlam Derleme"]
+    ActiveSchema --> PromptBuilder
+
+    PromptBuilder --> LLMEngine{"LLM Yürütüm Motoru<br/>(Ollama / Gemini / Groq / OpenRouter)"}
+
+    subgraph S2 ["2. Lazy-Start (Tembel Başlatma) MCP Motoru"]
+        LLMEngine -- "Araç Çağrısı Talep Edildi" --> LazyManager["Lazy-Start MCP Yöneticisi"]
+        LazyManager -- "Süreç Havuzunu Kontrol Et" --> PoolDecision{"Sunucu Süreci<br/>Zaten Çalışıyor mu?"}
+        PoolDecision -- "Evet" --> ExecTool["stdio ile Araç Çağrısını Yürüt"]
+        PoolDecision -- "Hayır (Sıfır Boşta Yük)" --> LRUCheck{"Aktif Sunucu Sayısı == Maksimum (5)?"}
+        LRUCheck -- "Evet" --> EvictLRU["En Az Kullanılan (LRU) Süreci Sonlandır"]
+        LRUCheck -- "Hayır" --> SpawnServer["Alt Süreci İhtiyaç Anında Başlat<br/>(uvx / npx / python)"]
+        EvictLRU --> SpawnServer
+        SpawnServer --> ExecTool
+    end
+
+    ExecTool --> ToolResult["Araç Sonucu Geri Akıtılır"]
+    ToolResult --> LLMEngine
+    LLMEngine -- "Nihai Yanıt" --> UserResponse(["Akışkan Kullanıcı Arayüzü"])
+```
+
+### Öne Çıkan Mimari Yetenekler
+1. **Lazy-Start (Tembel Başlatma) & Çevrimdışı Şema Önbelleği (`mcp_schema_cache.json`)**:
+   - **Sıfır Boşta Kaynak Tüketimi:** Araç şemaları ilk kayıtta yerel JSON önbelleğine alınır. Sistemde 150+ araç tanımlı olsa bile ALP **0 arka plan süreciyle < 0.05 saniyede** anında açılır.
+   - **İhtiyaç Anında Başlatma (On-Demand Spawning):** Arka plan araç süreçleri (`uvx`, `npx`, `python`), yalnızca LLM o aracı gerçekten çağırdığı milisaniyede ayağa kaldırılır.
+   - **LRU Süreç Havuzu Yönetimi:** ALP, aynı anda bellekte tutulan aktif MCP sunucu sayısını en fazla 5 ile sınırlar. Yeni bir araç gerektiğinde en uzun süredir kullanılmayan sunucu otomatik kapatılır; bilgisayarınızın RAM ve CPU kaynakları asla tükenmez.
+2. **Dinamik Araç Filtreleme (`filter_tools_for_task`)**:
+   - Yüzlerce aracın şemasını doğrudan isteme yığarak modelin mantığını bulandırmak ve token kotasını doldurmak yerine, ALP kullanıcının görev istemiyle yalnızca örtüşen araçları dinamik olarak seçip modele sunar.
+3. **Dinamik Yetenek Filtreleme (`filter_skills_for_task`)**:
+   - Yüklü `SKILL.md` prosedürlerini indeksler; prompt ile eşleşen alan kurallarını (ATS analizi, OSINT dorking vb.) seçici olarak bağlama ekler.
+
+---
+
 ## 🚀 Temel Özellikler
 
 ### 1. Çoklu Sağlayıcı ve Kayan Bağlam Penceresi
@@ -93,8 +141,16 @@ ALP Terminal derlenmiş standart kurulum dosyalarıyla dağıtılır. Python, Gi
 
 ### macOS (`.dmg` Disk İmajı)
 1. **[Sürüm v1.2.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.1)** sayfasından **[`ALP_Mac_Installer.dmg`](https://github.com/netizen4-bit/alpai/releases/download/v1.2.1/ALP_Mac_Installer.dmg)** dosyasını indirin.
-2. İndirilen `.dmg` dosyasını açın ve **ALP Terminal** simgesini **Applications** klasörüne sürükleyin.
-3. Uygulamayı başlatın. İlk açılışta gerekirse **Sistem Ayarları > Gizlilik ve Güvenlik** bölümünden uygulamaya izin verin.
+2. İndirilen `.dmg` dosyasını açın ve **ALP Terminal** (`ALP_Terminal_Mac.app`) simgesini **Applications (Uygulamalar)** klasörüne sürükleyin.
+3. **İlk Çalıştırma ve Apple Gatekeeper Onayı:**
+   ALP Terminal, Apple'ın yıllık ücretli ticari geliştirici sertifikasına tabi olmayan bağımsız bir açık kaynak projesi olarak derlendiği için macOS Gatekeeper ilk açılışta *"ALP_Terminal_Mac kötü amaçlı yazılımlara karşı kontrol edilemediği için açılamıyor"* uyarısı verebilir. Bu onay **yalnızca ilk çalıştırmada bir defaya mahsus** aşağıdaki pratik yöntemlerden biriyle verilir:
+   - **Yöntem 1 (Önerilen - 2 Tık):** **Applications (Uygulamalar)** klasörünü Finder'da açın. `ALP_Terminal_Mac` uygulamasına **Sağ Tıklayın (veya Control tuşuna basılı tutarak tıklayın)** ve **Aç (Open)** seçeneğini seçin. Açılan onay penceresinde tekrar **Aç (Open)** butonuna tıklayın.
+   - **Yöntem 2 (macOS Sistem Ayarları):** Uygulamayı açmayı deneyip uyarı penceresini gördüyseniz, **Apple Menüsü  > Sistem Ayarları > Gizlilik ve Güvenlik** bölümüne gidin. Ekranı aşağı kaydırarak *Güvenlik* başlığı altında yer alan *"ALP_Terminal_Mac uygulamasının engellendiği"* uyarısının yanındaki **Yine de Aç (Open Anyway)** butonuna tıklayın.
+   - **Yöntem 3 (Terminal Tek Satır Komut):** Terminal uygulamasını açarak indirme karantinasını tek satırla kaldırabilirsiniz:
+     ```bash
+     xattr -cr /Applications/ALP_Terminal_Mac.app
+     ```
+   *İlk onayın ardından ALP Terminal sonraki tüm açılışlarda standart bir şekilde çift tıklanarak doğrudan çalışacaktır.*
 
 ---
 

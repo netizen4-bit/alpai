@@ -61,6 +61,54 @@ Contemporary agentic platforms (such as Hermes or OpenClaw) force users into blo
 
 ---
 
+## 🧠 Scaled Execution Architecture: Lazy-Start & Dynamic Filtering
+
+When scaling to dozens or hundreds of connected MCP servers (150–200+ tools), conventional agent frameworks crash or suffer extreme latency from resource exhaustion and prompt context overflow. ALP Terminal solves this through a three-tier execution pipeline:
+
+```mermaid
+flowchart TD
+    UserQuery(["User Task / Query"]) --> DynamicFilter["Dynamic Task Filter (Zero Context Bloat)"]
+    
+    subgraph S1 ["1. Pre-Execution Filtering Layer"]
+        DynamicFilter --> FilterSkills["filter_skills_for_task<br/>(Scans SKILL.md index)"]
+        DynamicFilter --> FilterTools["filter_tools_for_task<br/>(Keyword Matching & Routing)"]
+        FilterSkills --> ActiveSkills["Active Relevant Skills"]
+        FilterTools --> ActiveSchema["Cached Tool Schemas<br/>(Offline mcp_schema_cache.json)"]
+    end
+
+    ActiveSkills --> PromptBuilder["Optimized Prompt & Context Assembly"]
+    ActiveSchema --> PromptBuilder
+
+    PromptBuilder --> LLMEngine{"LLM Execution Engine<br/>(Ollama / Gemini / Groq / OpenRouter)"}
+
+    subgraph S2 ["2. Lazy-Start MCP Execution Engine"]
+        LLMEngine -- "Tool Call Requested" --> LazyManager["Lazy-Start MCP Manager"]
+        LazyManager -- "Check Process Pool" --> PoolDecision{"Is Server Process<br/>Already Running?"}
+        PoolDecision -- "Yes" --> ExecTool["Execute Tool Call via stdio"]
+        PoolDecision -- "No (Zero Idle Cost)" --> LRUCheck{"Active Servers == Max (5)?"}
+        LRUCheck -- "Yes" --> EvictLRU["Evict & Terminate LRU Process"]
+        LRUCheck -- "No" --> SpawnServer["Spawn Subprocess on-demand<br/>(uvx / npx / python)"]
+        EvictLRU --> SpawnServer
+        SpawnServer --> ExecTool
+    end
+
+    ExecTool --> ToolResult["Tool Result Streamed Back"]
+    ToolResult --> LLMEngine
+    LLMEngine -- "Final Response" --> UserResponse(["Streaming UI Response"])
+```
+
+### Architectural Highlights
+1. **Lazy-Start & Offline Schema Cache (`mcp_schema_cache.json`)**:
+   - **Zero Idle Overhead:** Tool definitions are cached locally during initial registration. Even with 150+ tools configured, ALP starts up in **< 0.05 seconds with 0 background processes running**.
+   - **On-Demand Subprocess Spawning:** Background processes (`uvx`, `npx`, `python`) are only launched at the exact millisecond an LLM calls that specific tool.
+   - **LRU Process Pool Management:** ALP caps concurrent active subprocesses at a maximum of 5. The least-recently-used server is automatically terminated when a new one is needed, preserving host RAM and CPU.
+2. **Dynamic Tool Filtering (`filter_tools_for_task`)**:
+   - Instead of injecting hundreds of tools into the LLM system prompt (which degrades attention and exhausts token limits), ALP dynamically matches and supplies only tools relevant to the active prompt.
+3. **Dynamic Skill Filtering (`filter_skills_for_task`)**:
+   - Ingests and indexes installed `SKILL.md` documents, routing only the relevant domain procedures (e.g. ATS screening, OSINT dorking, bibliometrics) into the execution context.
+
+---
+
 ## 🚀 Key Features
 
 ### 1. Multi-Provider Fallback & Sliding Context Window
@@ -93,8 +141,16 @@ ALP Terminal is distributed as pre-compiled standalone installers. No Python env
 
 ### macOS (`.dmg` Drag-and-Drop)
 1. Download **[`ALP_Mac_Installer.dmg`](https://github.com/netizen4-bit/alpai/releases/download/v1.2.1/ALP_Mac_Installer.dmg)** from **[Release v1.2.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.1)**.
-2. Open the disk image and drag **ALP Terminal** into your `/Applications` directory.
-3. Open ALP. On first launch, approve the standard security prompt in **System Settings > Privacy & Security** if prompted.
+2. Open the disk image and drag **ALP Terminal** (`ALP_Terminal_Mac.app`) into your `/Applications` directory.
+3. **First-Time Launch (Apple Gatekeeper Verification):**
+   Because ALP Terminal is distributed directly without Apple's commercial developer fee certificate, macOS Gatekeeper may show a warning on first launch: *"ALP_Terminal_Mac can't be opened because Apple cannot check it for malicious software"*. You only need to approve it **once** using any of the following methods:
+   - **Method 1 (Recommended - 2 Clicks):** Open your `/Applications` folder in Finder. **Right-click (or Control-click)** on `ALP_Terminal_Mac` and select **Open**. In the confirmation dialog, click **Open**.
+   - **Method 2 (System Settings):** If you attempted to launch and saw the warning dialog, go to **Apple Menu  > System Settings > Privacy & Security**. Scroll down to the *Security* section where it notes *"ALP_Terminal_Mac was blocked"*, and click **Open Anyway**.
+   - **Method 3 (Terminal One-Liner):** Remove the browser quarantine attribute directly via Terminal:
+     ```bash
+     xattr -cr /Applications/ALP_Terminal_Mac.app
+     ```
+   *After this initial approval, ALP Terminal opens normally on every subsequent launch.*
 
 ---
 
