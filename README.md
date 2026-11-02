@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/netizen4-bit/alpai/releases"><img src="https://img.shields.io/badge/Release-v1.2.1-orange.svg?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/netizen4-bit/alpai/releases"><img src="https://img.shields.io/badge/Release-v1.2.2-orange.svg?style=for-the-badge" alt="Release"></a>
   <a href="https://github.com/netizen4-bit/alpai/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge" alt="License"></a>
   <a href="https://www.patreon.com/netizen4_bit"><img src="https://img.shields.io/badge/Patreon-Support-F96854?style=for-the-badge&logo=patreon&logoColor=white" alt="Patreon"></a>
   <a href="https://www.linkedin.com/in/nihatkasim"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
@@ -30,7 +30,7 @@
 
 ## Download latest release
 
-🔗 **[Download latest Windows Setup Wizard & macOS DMG (v1.2.1)](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.1)**
+🔗 **[Download latest Windows Setup Wizard & macOS DMG (v1.2.2)](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.2)**
 
 ---
 
@@ -135,12 +135,12 @@ flowchart TD
 ALP Terminal is distributed as pre-compiled standalone installers. No Python environment, Git installation, or setup scripts are needed.
 
 ### Windows (`.exe` Setup Wizard)
-1. Download **[`ALP_Setup_Win64.exe`](https://github.com/netizen4-bit/alpai/releases/download/v1.2.1/ALP_Setup_Win64.exe)** from **[Release v1.2.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.1)**.
+1. Download **[`ALP_Setup_Win64.exe`](https://github.com/netizen4-bit/alpai/releases/download/v1.2.2/ALP_Setup_Win64.exe)** from **[Release v1.2.2](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.2)**.
 2. Run the installer wizard to complete installation (Desktop and Start Menu shortcuts are created automatically).
 3. *(Optional for Local AI)* Ensure [Ollama](https://ollama.com/) is running either on Windows or inside WSL (`ollama serve`).
 
 ### macOS (`.dmg` Drag-and-Drop)
-1. Download **[`ALP_Mac_Installer.dmg`](https://github.com/netizen4-bit/alpai/releases/download/v1.2.1/ALP_Mac_Installer.dmg)** from **[Release v1.2.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.1)**.
+1. Download **[`ALP_Mac_Installer.dmg`](https://github.com/netizen4-bit/alpai/releases/download/v1.2.2/ALP_Mac_Installer.dmg)** from **[Release v1.2.2](https://github.com/netizen4-bit/alpai/releases/tag/v1.2.2)**.
 2. Open the disk image and drag **ALP Terminal** (`ALP_Terminal_Mac.app`) into your `/Applications` directory.
 3. **First-Time Launch (Apple Gatekeeper Verification):**
    Because ALP Terminal is distributed directly without Apple's commercial developer fee certificate, macOS Gatekeeper may show a warning on first launch: *"ALP_Terminal_Mac can't be opened because Apple cannot check it for malicious software"*. You only need to approve it **once** using any of the following methods:
