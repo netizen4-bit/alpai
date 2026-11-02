@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/netizen4-bit/alpai/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange.svg?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/netizen4-bit/alpai/releases"><img src="https://img.shields.io/badge/Release-v1.0.1-orange.svg?style=for-the-badge" alt="Release"></a>
   <a href="https://github.com/netizen4-bit/alpai/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge" alt="License"></a>
   <a href="https://www.patreon.com/netizen4_bit"><img src="https://img.shields.io/badge/Patreon-Support-F96854?style=for-the-badge&logo=patreon&logoColor=white" alt="Patreon"></a>
   <a href="https://www.linkedin.com/in/nihatkasim"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
@@ -30,7 +30,7 @@
 
 ## Download latest release
 
-🔗 **[Download latest Windows Setup Wizard & macOS DMG (v1.0.0)](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.0)**
+🔗 **[Download latest Windows Setup Wizard & macOS DMG (v1.0.1)](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.1)**
 
 ---
 
@@ -87,12 +87,12 @@ Contemporary agentic platforms (such as Hermes or OpenClaw) force users into blo
 ALP Terminal is distributed as pre-compiled standalone installers. No Python environment, Git installation, or setup scripts are needed.
 
 ### Windows (`.exe` Setup Wizard)
-1. Download `ALP_Setup_Win64.exe` from **[Releases](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.0)**.
+1. Download **[`ALP_Setup_Win64.exe`](https://github.com/netizen4-bit/alpai/releases/download/v1.0.1/ALP_Setup_Win64.exe)** from **[Release v1.0.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.1)**.
 2. Run the installer wizard to complete installation (Desktop and Start Menu shortcuts are created automatically).
 3. *(Optional for Local AI)* Ensure [Ollama](https://ollama.com/) is running either on Windows or inside WSL (`ollama serve`).
 
 ### macOS (`.dmg` Drag-and-Drop)
-1. Download `ALP_Mac_Installer.dmg` from **[Releases](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.0)**.
+1. Download **[`ALP_Mac_Installer.dmg`](https://github.com/netizen4-bit/alpai/releases/download/v1.0.1/ALP_Mac_Installer.dmg)** from **[Release v1.0.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.1)**.
 2. Open the disk image and drag **ALP Terminal** into your `/Applications` directory.
 3. Open ALP. On first launch, approve the standard security prompt in **System Settings > Privacy & Security** if prompted.
 

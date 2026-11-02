@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/netizen4-bit/alpai/releases"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v1.0.0-orange.svg?style=for-the-badge" alt="Sürüm"></a>
+  <a href="https://github.com/netizen4-bit/alpai/releases"><img src="https://img.shields.io/badge/S%C3%BCr%C3%BCm-v1.0.1-orange.svg?style=for-the-badge" alt="Sürüm"></a>
   <a href="https://github.com/netizen4-bit/alpai/blob/main/LICENSE"><img src="https://img.shields.io/badge/Lisans-Apache_2.0-blue.svg?style=for-the-badge" alt="Lisans"></a>
   <a href="https://www.patreon.com/netizen4_bit"><img src="https://img.shields.io/badge/Patreon-Destek-F96854?style=for-the-badge&logo=patreon&logoColor=white" alt="Patreon"></a>
   <a href="https://www.linkedin.com/in/nihatkasim"><img src="https://img.shields.io/badge/LinkedIn-Ba%C4%9Flant%C4%B1-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
@@ -30,7 +30,7 @@
 
 ## Güncel Sürümü İndir
 
-🔗 **[En son Windows ve macOS kurulum dosyalarını indirin (v1.0.0)](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.0)**
+🔗 **[En son Windows ve macOS kurulum dosyalarını indirin (v1.0.1)](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.1)**
 
 ---
 
@@ -87,12 +87,12 @@ Mevcut otonom ajan platformlarının çoğu (Hermes, OpenClaw vb.) kullanıcıla
 ALP Terminal derlenmiş standart kurulum dosyalarıyla dağıtılır. Python, Git veya ek bir geliştirme ortamı kurmanız gerekmez.
 
 ### Windows (`.exe` Kurulum Sihirbazı)
-1. **[Releases](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.0)** sayfasından `ALP_Setup_Win64.exe` dosyasını indirin.
+1. **[Sürüm v1.0.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.1)** sayfasından **[`ALP_Setup_Win64.exe`](https://github.com/netizen4-bit/alpai/releases/download/v1.0.1/ALP_Setup_Win64.exe)** dosyasını indirin.
 2. Kurulum sihirbazını çalıştırarak kurulumu tamamlayın (Masaüstü ve Başlat Menüsü kısayolları otomatik oluşturulur).
 3. *(Yerel Model Kullanımı İçin - İsteğe Bağlı)* [Ollama](https://ollama.com/)'nın Windows üzerinde veya WSL içinde açık olduğundan emin olun (`ollama serve`).
 
 ### macOS (`.dmg` Disk İmajı)
-1. **[Releases](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.0)** sayfasından `ALP_Mac_Installer.dmg` dosyasını indirin.
+1. **[Sürüm v1.0.1](https://github.com/netizen4-bit/alpai/releases/tag/v1.0.1)** sayfasından **[`ALP_Mac_Installer.dmg`](https://github.com/netizen4-bit/alpai/releases/download/v1.0.1/ALP_Mac_Installer.dmg)** dosyasını indirin.
 2. İndirilen `.dmg` dosyasını açın ve **ALP Terminal** simgesini **Applications** klasörüne sürükleyin.
 3. Uygulamayı başlatın. İlk açılışta gerekirse **Sistem Ayarları > Gizlilik ve Güvenlik** bölümünden uygulamaya izin verin.
 
