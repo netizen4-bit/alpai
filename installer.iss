@@ -1,6 +1,6 @@
 [Setup]
 AppName=ALP Terminal
-AppVersion=1.2.2
+AppVersion=1.5
 DefaultDirName={autopf}\ALP Terminal
 DefaultGroupName=ALP Terminal
 OutputDir=dist
